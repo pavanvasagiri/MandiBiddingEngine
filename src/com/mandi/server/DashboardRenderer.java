@@ -118,6 +118,16 @@ final class DashboardRenderer {
             .append(".toast pre{font-size:11px;background:#f6f8f6;border-radius:8px;padding:8px;margin-top:7px;overflow:auto;max-height:170px;white-space:pre-wrap}")
             .append("@keyframes slide{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}")
             .append(".foot{color:#6b7f6e;font-size:12px;text-align:center;margin:20px 0 4px}")
+            .append(".tabs{display:flex;gap:8px;margin:18px 0 14px;flex-wrap:wrap}")
+            .append(".tab{padding:9px 18px;border-radius:999px;border:1.5px solid #d7e5d7;background:#fff;color:#3f5244;font:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:.15s}")
+            .append(".tab:hover{border-color:#16a34a;color:#15803d}")
+            .append(".tab.active{background:linear-gradient(120deg,#15803d,#22c55e);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(22,163,74,.3)}")
+            .append(".module{display:none}")
+            .append(".module.active{display:block;animation:fade .22s ease}")
+            .append("@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}")
+            .append(".module .card{max-height:62vh;overflow-y:auto}")
+            .append(".module .card th{position:sticky;top:0;z-index:2}")
+            .append("#m-trends .charts{max-height:70vh;overflow-y:auto;padding-right:4px}")
             .append("</style></head><body><div class=\"wrap\">");
 
         html.append("<div class=\"hero\">")
@@ -139,6 +149,15 @@ final class DashboardRenderer {
             .append(kpi("\uD83C\uDFF7\uFE0F", "Open asks", String.valueOf(openAsks), "#ccfbf1", "kpi-asks"))
             .append("</div>");
 
+        html.append("<nav class=\"tabs\">")
+            .append("<button class=\"tab active\" data-m=\"m-overview\" onclick=\"showTab('m-overview')\">\uD83D\uDCCA Overview</button>")
+            .append("<button class=\"tab\" data-m=\"m-bids\" onclick=\"showTab('m-bids')\">\uD83D\uDED2 Bids</button>")
+            .append("<button class=\"tab\" data-m=\"m-settlements\" onclick=\"showTab('m-settlements')\">\uD83E\uDDFE Settlements</button>")
+            .append("<button class=\"tab\" data-m=\"m-trends\" onclick=\"showTab('m-trends')\">\uD83D\uDCC8 Trends</button>")
+            .append("<button class=\"tab\" data-m=\"m-trade\" onclick=\"showTab('m-trade')\">\uD83D\uDCB1 Trade</button>")
+            .append("</nav>");
+
+        html.append("<section class=\"module active\" id=\"m-overview\">");
         html.append("<div class=\"card\"><h2>Market overview</h2><table><thead><tr>")
             .append("<th class=\"l\">Crop</th><th>MSP (\u20B9/q)</th><th>7-day rolling avg</th><th>Bid ceiling (1.5\u00D7 avg)</th><th>Open bids</th><th>Open asks</th>")
             .append("</tr></thead><tbody>");
@@ -155,7 +174,9 @@ final class DashboardRenderer {
                 .append("</td></tr>");
         }
         html.append("</tbody></table></div>");
+        html.append("</section>");
 
+        html.append("<section class=\"module\" id=\"m-bids\">");
         html.append("<div class=\"card\"><h2>Recent bids <span class=\"mut\" style=\"font-weight:400;font-size:12px\">(latest 10, committed)</span></h2>");
         if (bidRows.isEmpty()) {
             html.append("<p class=\"mut\">No bids yet - place the first one below.</p></div>");
@@ -174,7 +195,9 @@ final class DashboardRenderer {
             }
             html.append("</tbody></table></div>");
         }
+        html.append("</section>");
 
+        html.append("<section class=\"module\" id=\"m-settlements\">");
         html.append("<div class=\"card\"><h2>Settlements <span class=\"mut\" style=\"font-weight:400;font-size:12px\">(latest 12)</span></h2>");
         if (settlements.isEmpty()) {
             html.append("<p class=\"mut\">Nothing settled yet - place bids, then run <b>Clear markets &amp; settle</b>.</p></div>");
@@ -195,7 +218,9 @@ final class DashboardRenderer {
             }
             html.append("</tbody></table></div>");
         }
+        html.append("</section>");
 
+        html.append("<section class=\"module\" id=\"m-trends\">");
         Map<String, List<MarketAnalyticsDAO.RollingAverage>> trends = new LinkedHashMap<>();
         for (MarketAnalyticsDAO.RollingAverage row : market.rolling7DayTrends()) {
             trends.computeIfAbsent(row.cropName(), name -> new ArrayList<>()).add(row);
@@ -216,7 +241,9 @@ final class DashboardRenderer {
                 .append("</div>");
         }
         html.append("</div>");
+        html.append("</section>");
 
+        html.append("<section class=\"module\" id=\"m-trade\">");
         html.append("<div class=\"card\"><h2>Place a bid</h2><form onsubmit=\"return false\"><div class=\"row\">")
             .append("<label>Crop<select id=\"crop\" onchange=\"onCropChange()\">");
         for (Crop crop : crops) {
@@ -240,6 +267,7 @@ final class DashboardRenderer {
             .append("<button class=\"btn ghost\" onclick=\"clearMarkets()\">\u2696 Clear markets &amp; settle</button>")
             .append("<button class=\"btn ghost\" onclick=\"reseed()\">\uD83C\uDF31 Reseed fresh market</button>")
             .append("</div></div>");
+        html.append("</section>");
 
         html.append("<div class=\"foot\">Mandi Bidding Engine &middot; local demo server (no auth) &middot; data: MySQL <b>mandi_db</b> &middot; order book auto-refreshes every 15s &middot; <span id=\"stamp\" class=\"mut\">live</span></div>")
             .append("<div id=\"toasts\"></div>")
@@ -274,6 +302,10 @@ final class DashboardRenderer {
             .append("set('kpi-bids',tb);set('kpi-asks',ta);")
             .append("const st=document.getElementById('stamp');if(st)st.textContent='auto-refreshed '+new Date().toLocaleTimeString();}catch(e){}}")
             .append("setInterval(refreshLive,15000);")
+            .append("function showTab(id){document.querySelectorAll('.module').forEach(m=>m.classList.toggle('active',m.id===id));")
+            .append("document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.m===id));")
+            .append("if(history.replaceState)history.replaceState(null,'','#'+id);refreshLive();window.scrollTo({top:0,behavior:'smooth'});}")
+            .append("(function(){const h=location.hash.slice(1);if(h&&document.getElementById(h))showTab(h);})();")
             .append("</script></body></html>");
         return html.toString();
     }
