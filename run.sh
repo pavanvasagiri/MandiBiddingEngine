@@ -15,7 +15,11 @@ rm -f build.sources
 echo "[2/3] Running engine regression tests ..."
 java -cp "out:lib/mysql-connector-j-8.3.0.jar" com.mandi.engine.DoubleAuctionEngineTest
 
-echo "[3/3] Running the live mandi simulation (main) ..."
-java -cp "out:lib/mysql-connector-j-8.3.0.jar" com.mandi.main.Main
-
-echo "Done. See historical_mandi_bids.csv for the settlement log."
+echo "[3/3] Building done. Mode: ${1:-simulate} ..."
+if [ "${1:-simulate}" = "server" ]; then
+  echo "Starting dashboard on http://localhost:8080 (Ctrl+C to stop) ..."
+  java -cp "out:lib/mysql-connector-j-8.3.0.jar" com.mandi.server.MandiServerMain
+else
+  java -cp "out:lib/mysql-connector-j-8.3.0.jar" com.mandi.main.Main
+  echo "Done. See historical_mandi_bids.csv for the settlement log."
+fi

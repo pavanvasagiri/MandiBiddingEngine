@@ -5,6 +5,29 @@ Production-grade Java 17+ backend for a mandi (agricultural market) that runs a
 **price manipulation**, and settles every trade with **full ACID guarantees**
 in MySQL. All monetary amounts and quantities use `java.math.BigDecimal`.
 
+## Quick start (for anyone opening this project)
+
+**You need:** JDK 17+ · MySQL 8.0+ running on `localhost:3306` · nothing else (the MySQL driver ships in `lib/`).
+
+```bash
+# 1. clone
+git clone https://github.com/pavanvasagiri/MandiBiddingEngine.git
+cd MandiBiddingEngine
+
+# 2. point the app at your MySQL (one time)
+cp config/db.properties.example config/db.properties    # then edit user + password
+#   Windows: copy config\db.properties.example config\db.properties
+
+# 3a. run the web dashboard -> open http://localhost:8080
+./run.sh server        # macOS/Linux      |  Windows: double-click start-server.bat
+
+# 3b. or run the scripted live simulation (console report + CSV export)
+./run.sh               # macOS/Linux      |  Windows: double-click run-simulation.bat
+```
+
+No clone needed to *look* around? If the host keeps a tunnel running, share its
+`https://*.trycloudflare.com` link — visitors only need a browser.
+
 ## Architecture
 
 | Package | Contents |
