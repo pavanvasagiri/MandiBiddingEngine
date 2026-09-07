@@ -72,11 +72,11 @@ final class DashboardRenderer {
             .append("<title>Mandi Bidding Engine</title><style>")
             .append("@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');")
             .append("*{box-sizing:border-box;margin:0;padding:0}")
-            .append("body{font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif;background:linear-gradient(160deg,#f2f8f2,#e9f2ea 55%,#eef5ee);min-height:100vh;color:#14251a;padding:26px 20px}")
+            .append("body{font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif;background:linear-gradient(160deg,#f2f8f2,#e9f2ea 55%,#eef5ee);min-height:100vh;color:#14251a;padding:26px 20px;overflow-x:hidden}")
             .append(".wrap{max-width:1120px;margin:0 auto}")
             .append(".hero{background:linear-gradient(120deg,#0f3d22,#15803d 55%,#22c55e);border-radius:18px;padding:24px 28px;color:#fff;display:flex;align-items:center;gap:18px;box-shadow:0 10px 30px rgba(21,128,61,.28);flex-wrap:wrap}")
             .append(".hero .logo{width:54px;height:54px;border-radius:14px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:28px}")
-            .append(".hero h1{font-size:21px;font-weight:800}")
+            .append(".hero h1{font-size:clamp(15px,2.2vw,21px);font-weight:800}")
             .append(".hero p{opacity:.88;font-size:12.5px;margin-top:3px}")
             .append(".hero .spacer{flex:1}")
             .append(".live{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.15);padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700}")
@@ -87,23 +87,23 @@ final class DashboardRenderer {
             .append(".hero .btn{background:rgba(255,255,255,.16)}.hero .btn:hover{background:rgba(255,255,255,.3)}")
             .append(".btn.ghost{background:#fff;color:#15803d;border:1.5px solid #bbf7d0}.btn.ghost:hover{background:#f0fdf4}");
 
-        html.append(".kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:14px;margin:18px 0}")
-            .append(".kpi{background:#fff;border-radius:14px;padding:15px 17px;box-shadow:0 4px 14px rgba(20,37,26,.06);display:flex;gap:13px;align-items:center}")
+        html.append(".kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:18px 0}")
+            .append(".kpi{background:#fff;border-radius:14px;padding:15px 17px;box-shadow:0 4px 14px rgba(20,37,26,.06);display:flex;gap:13px;align-items:center;min-width:0}")
             .append(".kpi .ico{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}")
             .append(".kpi .lbl{font-size:11px;color:#5b6b5e;font-weight:700;text-transform:uppercase;letter-spacing:.5px}")
-            .append(".kpi .val{font-size:18px;font-weight:800;margin-top:2px;white-space:nowrap}")
+            .append(".kpi .val{font-size:16.5px;font-weight:800;margin-top:2px;line-height:1.3;overflow-wrap:anywhere}")
             .append(".card{background:#fff;border-radius:14px;box-shadow:0 4px 14px rgba(20,37,26,.06);padding:20px 22px;margin-bottom:18px}")
             .append(".card h2{font-size:15px;font-weight:800;color:#14532d;margin-bottom:12px}")
             .append("table{width:100%;border-collapse:collapse;font-size:13.5px}")
             .append("th{background:#f0fdf4;color:#166534;text-align:right;padding:9px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid #bbf7d0}")
-            .append("td{padding:8px 12px;text-align:right;border-bottom:1px solid #eef4ee}")
+            .append("td{padding:8px 12px;text-align:right;border-bottom:1px solid #eef4ee;overflow-wrap:break-word}")
             .append("th.l,td.l{text-align:left}tbody tr:hover{background:#f7fcf7}tr:last-child td{border-bottom:0}")
             .append(".badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700}")
             .append(".b-acc{background:#dcfce7;color:#166534}.b-rej{background:#fee2e2;color:#b91c1c}.b-mut{background:#f1f5f1;color:#64748b}")
             .append(".up{color:#15803d;font-weight:700}.down{color:#b91c1c;font-weight:700}.mut{color:#64748b}")
             .append(".charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}")
             .append(".chart-card{background:#fff;border-radius:14px;box-shadow:0 4px 14px rgba(20,37,26,.06);padding:16px 18px}")
-            .append(".chart-card h3{font-size:13.5px;color:#14532d;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}")
+            .append(".chart-card h3{font-size:13.5px;color:#14532d;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:6px;flex-wrap:wrap}")
             .append("svg{width:100%;height:auto;display:block}")
             .append("form .row{display:flex;flex-wrap:wrap;gap:12px;align-items:end}")
             .append("form label{font-size:11.5px;font-weight:700;color:#3f5244;display:flex;flex-direction:column;gap:5px;text-transform:uppercase;letter-spacing:.4px}")
@@ -128,6 +128,7 @@ final class DashboardRenderer {
             .append(".module .card{max-height:62vh;overflow-y:auto}")
             .append(".module .card th{position:sticky;top:0;z-index:2}")
             .append("#m-trends .charts{max-height:70vh;overflow-y:auto;padding-right:4px}")
+            .append("@media(max-width:640px){body{padding:16px 10px}.hero{padding:18px}.card{padding:14px 16px}.kpi{padding:12px 14px}.kpi .val{font-size:14.5px}.tab{padding:8px 12px;font-size:12px}td,th{padding:6px 8px}}")
             .append("</style></head><body><div class=\"wrap\">");
 
         html.append("<div class=\"hero\">")
@@ -142,9 +143,9 @@ final class DashboardRenderer {
 
         html.append("<div class=\"kpis\">")
             .append(kpi("\uD83D\uDCBC", "Settled trades", String.valueOf(settlements.size()), "#dcfce7", "kpi-settlements"))
-            .append(kpi("\uD83D\uDCB0", "Gross traded", money(gross), "#fef9c3", "kpi-gross"))
-            .append(kpi("\uD83E\uDDFE", "Mandi tax (2%)", money(tax), "#fee2e2", "kpi-tax"))
-            .append(kpi("\uD83D\uDC68\u200D\uD83C\uDF3E", "Farmer payouts", money(payout), "#dbeafe", "kpi-payout"))
+            .append(kpi("\uD83D\uDCB0", "Gross traded", compactMoney(gross), "#fef9c3", "kpi-gross"))
+            .append(kpi("\uD83E\uDDFE", "Mandi tax (2%)", compactMoney(tax), "#fee2e2", "kpi-tax"))
+            .append(kpi("\uD83D\uDC68\u200D\uD83C\uDF3E", "Farmer payouts", compactMoney(payout), "#dbeafe", "kpi-payout"))
             .append(kpi("\uD83D\uDED2", "Open bids", String.valueOf(openBids), "#ede9fe", "kpi-bids"))
             .append(kpi("\uD83C\uDFF7\uFE0F", "Open asks", String.valueOf(openAsks), "#ccfbf1", "kpi-asks"))
             .append("</div>");
@@ -273,6 +274,7 @@ final class DashboardRenderer {
             .append("<div id=\"toasts\"></div>")
             .append("<script>")
             .append("const money=n=>'\\u20B9'+Number(n).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});")
+            .append("const compact=n=>{n=+n;const a=Math.abs(n);return a>=1e7?'\\u20B9'+(n/1e7).toFixed(2)+' Cr':a>=1e5?'\\u20B9'+(n/1e5).toFixed(2)+' L':'\\u20B9'+n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});};")
             .append("function toast(title,body,ok){const t=document.createElement('div');t.className='toast'+(ok?'':' err');")
             .append("t.innerHTML='<b>'+title+'</b><pre>'+body+'</pre>';document.getElementById('toasts').appendChild(t);setTimeout(()=>t.remove(),6000);}")
             .append("async function post(url,body){try{const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});")
@@ -298,7 +300,7 @@ final class DashboardRenderer {
             .append("b.forEach(r=>{const e1=document.getElementById('book-bids-'+r.cropId),e2=document.getElementById('book-asks-'+r.cropId);")
             .append("if(e1)e1.textContent=r.openBids;if(e2)e2.textContent=r.openAsks;tb+=r.openBids;ta+=r.openAsks;});")
             .append("const s=await(await fetch('/api/settlements')).json();")
-            .append("set('kpi-settlements',s.count);set('kpi-gross',money(s.grossAmount));set('kpi-tax',money(s.mandiTax));set('kpi-payout',money(s.farmerPayout));")
+            .append("set('kpi-settlements',s.count);set('kpi-gross',compact(s.grossAmount));set('kpi-tax',compact(s.mandiTax));set('kpi-payout',compact(s.farmerPayout));")
             .append("set('kpi-bids',tb);set('kpi-asks',ta);")
             .append("const st=document.getElementById('stamp');if(st)st.textContent='auto-refreshed '+new Date().toLocaleTimeString();}catch(e){}}")
             .append("setInterval(refreshLive,15000);")
@@ -321,6 +323,18 @@ final class DashboardRenderer {
     }
 
     private static String money(BigDecimal value) {
+        return "\u20B9" + MONEY.format(value);
+    }
+
+    /** Compact Indian notation (crore / lakh) for KPI cards so long values never overflow. */
+    private static String compactMoney(BigDecimal value) {
+        BigDecimal abs = value.abs();
+        if (abs.compareTo(new BigDecimal("10000000")) >= 0) {
+            return "\u20B9" + value.divide(new BigDecimal("10000000"), 2, java.math.RoundingMode.HALF_UP) + " Cr";
+        }
+        if (abs.compareTo(new BigDecimal("100000")) >= 0) {
+            return "\u20B9" + value.divide(new BigDecimal("100000"), 2, java.math.RoundingMode.HALF_UP) + " L";
+        }
         return "\u20B9" + MONEY.format(value);
     }
 

@@ -98,6 +98,23 @@ public final class MandiHttpServer {
                 task -> new Thread(task, "http-thread-" + threadCounter.incrementAndGet())));
         server.start();
         System.out.println("Mandi HTTP server listening on http://localhost:" + port + "  (dashboard at /)");
+        System.out.println("Share on your network (same WiFi):");
+        try {
+            java.net.NetworkInterface.getNetworkInterfaces().asIterator().forEachRemaining(ni -> {
+                try {
+                    if (!ni.isUp() || ni.isLoopback() || !ni.getInetAddresses().hasMoreElements()) return;
+                    ni.getInetAddresses().asIterator().forEachRemaining(addr -> {
+                        if (!addr.isLoopbackAddress() && addr instanceof java.net.Inet4Address) {
+                            System.out.println("  -> http://" + addr.getHostAddress() + ":" + port);
+                        }
+                    });
+                } catch (Exception ignored) {
+                    // interface not usable - skip it
+                }
+            });
+        } catch (Exception ignored) {
+            // address enumeration unavailable - localhost entry already printed
+        }
     }
 
     /**
