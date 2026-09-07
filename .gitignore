@@ -1,0 +1,16 @@
+# Build output
+out/
+build/
+build.sources
+dist/
+
+# Runtime artifacts
+*.log
+server.pid
+historical_mandi_bids.csv
+
+# Local secrets - commit the example instead
+config/db.properties
+
+# macOS noise
+.DS_Store

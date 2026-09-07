@@ -1,0 +1,38 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Mandi Local Server (dashboard on :8080)",
+            "request": "launch",
+            "mainClass": "com.mandi.server.MandiServerMain",
+            "cwd": "${workspaceFolder}",
+            "classPaths": [
+                "${workspaceFolder}/out",
+                "${workspaceFolder}/lib/mysql-connector-j-8.3.0.jar"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Mandi Simulation (com.mandi.main.Main)",
+            "request": "launch",
+            "mainClass": "com.mandi.main.Main",
+            "cwd": "${workspaceFolder}",
+            "classPaths": [
+                "${workspaceFolder}/out",
+                "${workspaceFolder}/lib/mysql-connector-j-8.3.0.jar"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Engine Regression Tests (DoubleAuctionEngineTest)",
+            "request": "launch",
+            "mainClass": "com.mandi.engine.DoubleAuctionEngineTest",
+            "cwd": "${workspaceFolder}",
+            "classPaths": [
+                "${workspaceFolder}/out",
+                "${workspaceFolder}/lib/mysql-connector-j-8.3.0.jar"
+            ]
+        }
+    ]
+}
