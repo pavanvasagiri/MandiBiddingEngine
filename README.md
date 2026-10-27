@@ -104,6 +104,10 @@ java -jar dist/MandiBiddingEngine.jar server   # dashboard on http://localhost:8
 java -jar dist/MandiBiddingEngine.jar server 9090   # custom port (or MANDI_PORT env)
 ```
 
+(or double-click `mandi-server.command` on macOS).
+java -jar dist/MandiBiddingEngine.jar server 9090   # custom port (or MANDI_PORT env)
+```
+
 (or double-click `mandi-server.command` on macOS). With `db.reset=true` the
 server rebuilds a freshly seeded market on every start; set `db.reset=false`
 to keep data across restarts (open lots are reloaded into the ask book).
