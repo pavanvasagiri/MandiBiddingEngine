@@ -52,14 +52,21 @@ fi
 log "MySQL is reachable on 127.0.0.1:3306"
 
 # ---------- 2. Handle an already-running / stale server ----------
+# First, is the port itself already serving a healthy dashboard?
+if curl -s --max-time 3 "http://localhost:$PORT/api/health" >/dev/null 2>&1; then
+  log "A healthy Mandi server is already on http://localhost:$PORT"
+  # Record the port-holder's PID if we can find it, for future stop/status.
+  port_pid="$( (lsof -iTCP -sTCP:LISTEN -P -n 2>/dev/null || ss -tlnp 2>/dev/null) \
+    | awk -v p=":$PORT" '$0 ~ p {print}' | awk '{print $2}' | head -1 )"
+  if [ -n "$port_pid" ]; then echo "$port_pid" > "$PIDFILE"; fi
+  open "http://localhost:$PORT" 2>/dev/null || true
+  exit 0
+fi
+
+# Port is either free, or held by something unhealthy. Clear it.
 if [ -f "$PIDFILE" ]; then
   old_pid="$(cat "$PIDFILE" 2>/dev/null || true)"
   if [ -n "$old_pid" ] && kill -0 "$old_pid" 2>/dev/null; then
-    if curl -s --max-time 3 "http://localhost:$PORT/api/health" >/dev/null 2>&1; then
-      log "Server already running (PID $old_pid) and healthy on http://localhost:$PORT"
-      open "http://localhost:$PORT" 2>/dev/null || true
-      exit 0
-    fi
     log "Existing server (PID $old_pid) not healthy - stopping it first ..."
     kill "$old_pid" 2>/dev/null || true
     slept=0
@@ -70,6 +77,26 @@ if [ -f "$PIDFILE" ]; then
   fi
   log "Removing stale server.pid"
   rm -f "$PIDFILE"
+fi
+
+# If another process still holds the port, kill it so we can bind cleanly.
+port_holder="$( (lsof -iTCP -sTCP:LISTEN -P -n 2>/dev/null || ss -tlnp 2>/dev/null) \
+  | awk -v p=":$PORT" '$0 ~ p {print}' | awk '{print $2}' | head -1 )"
+if [ -n "$port_holder" ]; then
+  log "Port $PORT held by PID $port_holder (not our healthy server) - stopping it ..."
+  kill "$port_holder" 2>/dev/null || true
+  slept=0
+  while (lsof -iTCP -sTCP:LISTEN -P -n 2>/dev/null || ss -tlnp 2>/dev/null) \
+    | awk -v p=":$PORT" '$0 ~ p {print}' | grep -q . && [ "$slept" -lt 15 ]; do
+    sleep 1; slept=$((slept+1))
+  done
+  if (lsof -iTCP -sTCP:LISTEN -P -n 2>/dev/null || ss -tlnp 2>/dev/null) \
+    | awk -v p=":$PORT" '$0 ~ p {print}' | grep -q .; then
+    log "Force-freeing port $PORT ..."
+    (lsof -iTCP -sTCP:LISTEN -P -n 2>/dev/null || ss -tlnp 2>/dev/null) \
+      | awk -v p=":$PORT" '$0 ~ p {print}' | awk '{print $2}' | xargs -r kill -9 2>/dev/null || true
+    sleep 1
+  fi
 fi
 
 # ---------- 3. Compile if needed ----------
