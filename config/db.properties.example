@@ -1,0 +1,18 @@
+# ---------------------------------------------------------------------------
+# Mandi Bidding Engine - database configuration template
+#
+# Copy this file to config/db.properties and fill in your local credentials:
+#     cp config/db.properties.example config/db.properties
+#
+# The real db.properties is git-ignored; environment variables
+# MANDI_DB_URL / MANDI_DB_USER / MANDI_DB_PASSWORD override it at runtime.
+# ---------------------------------------------------------------------------
+db.server.url=jdbc:mysql://localhost:3306
+db.name=mandi_db
+db.params=?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+db.user=root
+db.password=change-me
+db.pool.size=10
+# true  -> DROP and recreate the schema on every start (deterministic demo runs)
+# false -> keep existing data; only create missing tables
+db.reset=true
